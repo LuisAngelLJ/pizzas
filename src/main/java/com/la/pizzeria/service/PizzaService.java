@@ -2,23 +2,30 @@ package com.la.pizzeria.service;
 
 import com.la.pizzeria.PizzeriaApplication;
 import com.la.pizzeria.persistence.entity.PizzaEntity;
+import com.la.pizzeria.persistence.repository.PizzaPagSortRepository;
 import com.la.pizzeria.persistence.repository.PizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 @Service
 public class PizzaService {
     private final PizzaRepository pizzaRepository;//al poner final me pide ponerlo en un constructor
+    private final PizzaPagSortRepository pizzaPagSortRepository;
 
     @Autowired
-    public PizzaService(PizzaRepository pizzaRepository) {
+    public PizzaService(PizzaRepository pizzaRepository, PizzaPagSortRepository pizzaPagSortRepository) {
         this.pizzaRepository = pizzaRepository;
+        this.pizzaPagSortRepository = pizzaPagSortRepository;
     }
 
-    public List<PizzaEntity> getAll() {
-        return this.pizzaRepository.findAll();
+    public Page<PizzaEntity> getAll(int page, int elements) {
+        Pageable pageRequest = PageRequest.of(page, elements);
+        return this.pizzaPagSortRepository.findAll(pageRequest);//findAll de tipo pegeable
     }
 
     public PizzaEntity get(int idPizza) {
@@ -47,7 +54,7 @@ public class PizzaService {
 
     //recuperar pizza apartir de su nombre
     public PizzaEntity getByName(String name) {
-        return this.pizzaRepository.findAllByAvailableTrueAndNameIgnoreCase(name);
+        return this.pizzaRepository.findFirstByAvailableTrueAndNameIgnoreCase(name).orElseThrow(() -> new RuntimeException("La pizza no existe"));
     }
 
     //recuperar pizza por ingrediente
@@ -58,5 +65,10 @@ public class PizzaService {
     //recuperar pizza que no tenga este ingrediente
     public List<PizzaEntity> getWithout(String ingredient) {
         return this.pizzaRepository.findAllByAvailableTrueAndDescriptionNotContainingIgnoreCase(ingredient);
+    }
+
+    //listar las 3 pizzas más baratas dado un precio
+    public List<PizzaEntity> getCheapest(double price) {
+        return this.pizzaRepository.findTop3ByAvailableTrueAndPriceLessThanEqualOrderByPriceAsc(price);
     }
 }
