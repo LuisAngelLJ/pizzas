@@ -2,6 +2,7 @@ package com.la.pizzeria.web.controller;
 
 import com.la.pizzeria.persistence.entity.OrderEntity;
 import com.la.pizzeria.service.OrderService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,5 +22,15 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderEntity>> getAll() {
         return ResponseEntity.ok(this.orderService.getAll());
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<OrderEntity>> getTodayOrders() {
+        return ResponseEntity.ok(this.orderService.getTodayOrders());
+    }
+
+    @GetMapping("/outside")
+    public ResponseEntity<List<OrderEntity>> getOutsideOrders() {
+        return ResponseEntity.ok(this.orderService.getOutsideOrders());
     }
 }

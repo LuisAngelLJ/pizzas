@@ -1,5 +1,6 @@
 package com.la.pizzeria.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +36,11 @@ public class OrderEntity {
     private String additionalNotes;
 
     //relaciones
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)//no cargar la información a menos que se use de momento solo esta referenciado y se quitan los select a customer
     @JoinColumn(name = "id_customer", referencedColumnName = "id_customer", insertable = false, updatable = false)
+    @JsonIgnore
     private CustomerEntity customer;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)//cuando tratemos de recuperar un OrderEntity me tariga esta relación
     private List<OrderItemEntity> items;
 }
