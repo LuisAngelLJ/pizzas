@@ -57,8 +57,12 @@ public class PizzaController {
 
     //obtener las pizzas disponibles
     @GetMapping("/available")
-    public ResponseEntity<List<PizzaEntity>> getAvailable() {
-        return ResponseEntity.ok(this.pizzaService.getAvailable());
+    public ResponseEntity<Page<PizzaEntity>> getAvailable(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "5") int elements,
+                                                          @RequestParam(defaultValue = "price") String price,
+                                                          @RequestParam(defaultValue = "ASC") String sortDirection) {
+        //reibe el número de pagina a ver, número de elementos por páina y el atributo por el que queremos ordenar
+        return ResponseEntity.ok(this.pizzaService.getAvailable(page, elements, price, sortDirection));
     }
 
     //recuperar pizza apartir del nombre
