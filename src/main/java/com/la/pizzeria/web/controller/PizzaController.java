@@ -2,6 +2,7 @@ package com.la.pizzeria.web.controller;
 
 import com.la.pizzeria.persistence.entity.PizzaEntity;
 import com.la.pizzeria.service.PizzaService;
+import com.la.pizzeria.service.dto.UpdatePizzaPriceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -87,5 +88,15 @@ public class PizzaController {
     @GetMapping("/cheapest/{price}")
     public ResponseEntity<List<PizzaEntity>> getCheapest(@PathVariable double price) {
         return ResponseEntity.ok(this.pizzaService.getCheapest(price));
+    }
+
+    //modificar precio
+    @PutMapping("/price")
+    public ResponseEntity<Void> updatePrice(@RequestBody UpdatePizzaPriceDto dto) {
+        if (this.pizzaService.exist(dto.getPizzaId())) {
+            this.pizzaService.updatePrice(dto);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

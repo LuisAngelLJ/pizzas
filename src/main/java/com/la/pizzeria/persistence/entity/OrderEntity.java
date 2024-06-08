@@ -42,5 +42,6 @@ public class OrderEntity {
     private CustomerEntity customer;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)//cuando tratemos de recuperar un OrderEntity me tariga esta relación
+    @OrderBy("price ASC")//ordenado por precio
     private List<OrderItemEntity> items;
 }

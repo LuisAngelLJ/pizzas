@@ -1,6 +1,7 @@
 package com.la.pizzeria.service;
 
 import com.la.pizzeria.persistence.entity.OrderEntity;
+import com.la.pizzeria.persistence.projection.OrderSummary;
 import com.la.pizzeria.persistence.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +37,15 @@ public class OrderService {
         //crear lista de string - (D domicilio), (C llevar), (S para comer en el comercio)
         List<String> methods = Arrays.asList("D", "C");
         return this.orderRepository.findAllByMethodIn(methods);
+    }
+
+    //ordernes de cliente
+    public List<OrderEntity> getCustomerOrders(String idCustomer) {
+        return this.orderRepository.findCustomerOrders(idCustomer);
+    }
+
+    //projection, orden detallada
+    public OrderSummary getSummary(int orderId) {
+        return this.orderRepository.findSummary(orderId);
     }
 }
