@@ -3,7 +3,9 @@ package com.la.pizzeria.service;
 import com.la.pizzeria.persistence.entity.OrderEntity;
 import com.la.pizzeria.persistence.projection.OrderSummary;
 import com.la.pizzeria.persistence.repository.OrderRepository;
+import com.la.pizzeria.service.dto.OrderRandomDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,5 +49,11 @@ public class OrderService {
     //projection, orden detallada
     public OrderSummary getSummary(int orderId) {
         return this.orderRepository.findSummary(orderId);
+    }
+
+    @Transactional
+    //procedure para el descuento - los parametros los recibo a partir de un dto
+    public boolean saveRandomOrder(OrderRandomDto randomOrderDto) {
+        return this.orderRepository.saveRandomOrder(randomOrderDto.getIdCustomer(), randomOrderDto.getMethod());
     }
 }

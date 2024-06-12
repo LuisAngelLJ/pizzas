@@ -3,6 +3,7 @@ package com.la.pizzeria.persistence.repository;
 import com.la.pizzeria.persistence.entity.OrderEntity;
 import com.la.pizzeria.persistence.projection.OrderSummary;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -20,7 +21,7 @@ public interface OrderRepository extends ListCrudRepository<OrderEntity, Integer
     @Query(value = "SELECT * FROM pizza_order WHERE id_customer = :id", nativeQuery = true)
     List<OrderEntity> findCustomerOrders(@Param("id") String idCustomer);
 
-    //utilizo la interface OrderSummary
+    //utilizo la interface OrderSummary(projection)
     @Query(value = "SELECT  po.id_order AS idOrder, cu.name AS customerName, po.date AS orderDate," +
             "        po.total AS orderTotal, GROUP_CONCAT(pi.name) AS pizzaNames " +
             "FROM   pizza_order po  " +
@@ -30,4 +31,9 @@ public interface OrderRepository extends ListCrudRepository<OrderEntity, Integer
             "WHERE  po.id_order = :orderId " +
             "GROUP BY po.id_order, cu.name, po.date, po.total", nativeQuery = true)
     OrderSummary findSummary(@Param("orderId") int orderId);
+
+    //se le indica el nombre del procedure y el valor dfe salida
+    @Procedure(value = "take_random_pizza_order", outputParameterName = "order_taken")
+    boolean saveRandomOrder(@Param("id_customer") String idCustomer,@Param("method") String method);
+    //los param deben de llamarse igual que los parametros de el sql de la base
 }
