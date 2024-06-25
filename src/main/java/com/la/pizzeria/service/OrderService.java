@@ -43,7 +43,7 @@ public class OrderService {
     }
 
     //ordernes de cliente
-    @Secured("ADMIN")
+    @Secured("ROLE_ADMIN")
     public List<OrderEntity> getCustomerOrders(String idCustomer) {
         return this.orderRepository.findCustomerOrders(idCustomer);
     }
